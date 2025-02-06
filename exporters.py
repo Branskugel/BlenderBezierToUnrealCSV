@@ -82,6 +82,36 @@ class BezierBatchExporter(bpy.types.Operator, ExportHelper, BezierExporterBase):
         default="BezierCurve_###",
     )
 
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "naming_option")
+
+        if self.naming_option == 'TEMPLATE':
+            layout.prop(self, "template")
+            # Отображение примера имени файла
+            example_filename = self.get_example_filename(context)
+            layout.label(text=f"Example: {example_filename}")
+        elif self.naming_option == 'OBJECT_NAME':
+            # Отображение примера имени файла для варианта Object Name
+            example_filename = self.get_example_filename(context)
+            layout.label(text=f"Example: {example_filename}")
+
+    def get_example_filename(self, context):
+        obj = context.active_object
+        if not obj or obj.type != 'CURVE':
+            return "example_filename.csv"
+
+        if self.naming_option == 'OBJECT_NAME':
+            return f"{obj.name}.csv"
+        elif self.naming_option == 'TEMPLATE':
+            # Используем первый сплайн для примера
+            spline = obj.data.splines[0]
+            spline_index = 1
+            file_name = self.template.replace('###', f"{spline_index:03}")
+            return f"{file_name}_{obj.name}.csv"
+        else:
+            return "example_filename.csv"
+
     def invoke(self, context, event):
         return ExportHelper.invoke(self, context, event)
 
@@ -113,6 +143,4 @@ class BezierBatchExporter(bpy.types.Operator, ExportHelper, BezierExporterBase):
                     file_path = os.path.join(export_path, f"{file_name}_{obj.name}.csv")
                 success = self.export_bezier(spline, file_path)
                 if not success:
-                    self.report({'WARNING'}, f"Object '{obj.name}' export failed")
-            else:
-                self.report({'WARNING'}, f"Curve '{obj.name}' spline {i} is not a Bezier curve")
+                    self.report({'WARNING'}, f"Curve '{obj.name}' spline {i} is not a Bezier curve")
