@@ -8,7 +8,7 @@ from .bezier_exporter_base import BezierExporterBase
 
 class BezierSingleExporter(bpy.types.Operator, ExportHelper, BezierExporterBase):
     bl_idname = "export_bezier.single_beziercsv"
-    bl_label = "Export BezierCSV For UE4"
+    bl_label = "Export BezierCSV For UE"
     bl_options = {'REGISTER', 'UNDO'}
 
     filename_ext = ".csv"
@@ -56,7 +56,7 @@ class BezierSingleExporter(bpy.types.Operator, ExportHelper, BezierExporterBase)
 
 class BezierBatchExporter(bpy.types.Operator, ExportHelper, BezierExporterBase):
     bl_idname = "export_bezier.batch_beziercsv"
-    bl_label = "Batch Export BezierCSV For UE4"
+    bl_label = "Batch Export BezierCSV For UE"
     bl_options = {'REGISTER', 'UNDO'}
 
     filename_ext = ".csv"
